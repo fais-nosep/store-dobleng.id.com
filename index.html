@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DOBLENG OFFICIAL</title>
+<style>
+:root{
+  --bg:#0d111b;
+  --card:#121827;
+  --accent:#4f46e5;
+  --text:#e6eef6;
+}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);}
+header{padding:16px;text-align:center;font-size:20px;font-weight:bold;background:var(--card);border-bottom:1px solid #222;}
+.container{max-width:900px;margin:20px auto;padding:10px;}
+.card{background:var(--card);padding:15px;border-radius:10px;margin-bottom:15px;border:1px solid rgba(255,255,255,0.05);}
+.input, select{width:100%;padding:10px;margin:5px 0;border-radius:8px;background:#0e1920;border:1px solid #222;color:var(--text);}
+.btn{padding:10px;border:none;width:100%;border-radius:8px;background:var(--accent);color:white;margin-top:8px;cursor:pointer;}
+.payment-btn{padding:10px;border:none;width:100%;border-radius:8px;margin-top:5px;color:white;cursor:pointer;}
+.dana{background:#1e88e5;}
+.gopay{background:#0aa344;}
+.qris{background:#f7931a;}
+#qrisContainer{margin-top:10px;display:none;text-align:center;}
+#qrisContainer img{max-width:200px;border-radius:8px;}
+</style>
+</head>
+<body><header>DOBLENG OFFICIAL</header>
+<div class="container"><!-- Kontak Admin --><div class="card">
+<h3>BANTUAN ADMIN/KIRIM BUKTI TRASNFER KE ADMIN AJAH OKEY</h3>
+<a href="https://wa.me/6285716768185" target="_blank" class="btn">Chat Admin</a>
+</div><!-- Order Panel --><div class="card">
+<h3>Pesan Panel / VPS / Server</h3>
+<label>Username</label><input id="username" class="input" placeholder="Masukkan username">
+<label>Email</label><input id="email" class="input" placeholder="Masukkan email">
+<label>Paket</label>
+<select id="paket" class="input">
+  <option value="">--Pilih Paket--</option>
+  <option value="PANEL 1GB RAM 1GB|2000">PANEL 1GB — 2k</option>
+  <option value="PANEL 2GB RAM 2GB|5000">PANEL 2GB — 3k</option>
+  <option value="PANEL 3GB RAM 3GB|7000">PANEL 3GB — 4k</option>
+  <option value="PANEL 4GB RAM 4GB|9000">PANEL 4GB — 4.5k</option>
+  <option value="PANEL 8GB RAM 8GB|15000">PANEL 5GB — 5k</option>
+  <option value="UNLIMITED|16000">PANEL UNLIMITED — 10k</option>
+  <option value="VPS 1 CPU 1GB RAM|12000">VPS 1 CPU 1GB RAM — 12k</option>
+  <option value="VPS 2 CPU 2GB RAM|20000">VPS 2 CPU 2GB RAM — 20k</option>
+  <option value="VPS 4 CPU 4GB RAM|35000">VPS 4 CPU 4GB RAM — 35k</option>
+  <option value="VPS 8 CPU 8GB RAM|60000">VPS 8 CPU 8GB RAM — 60k</option>
+  <option value="Server API Meta AI|50000">Server API Meta AI — 50k</option>
+  <option value="Server API PPOB|30000">Server API PPOB — 30k</option>
+  <option value="Server API Payment Gateway|40000">Server API Payment Gateway — 40k</option>
+  <option value="Server API Email|20000">Server API Email — 20k</option>
+  <option value="Server API SMS|15000">Server API SMS — 15k</option>
+</select>
+<div style="margin-top:10px;">
+  <button class="payment-btn dana" onclick="bayarDana()">DANA</button>
+  <button class="payment-btn gopay" onclick="bayarGopay()">GOPAY</button>
+  <button class="payment-btn qris" onclick="tampilkanQRIS()">QRIS</button>
+  <div id="qrisContainer"><img src="https://i.ibb.co/ZzqXzgRf/Screenshot-2025-11-23-15-35-13-15-680d03679600f7af0b4c700c6b270fe7.jpg" alt="QRIS"></div>
+</div>
+<input type="file" id="bukti" class="input" accept="image/*">
+<button class="btn" onclick="uploadOrder()">Submit Order</button>
+</div><!-- Claim Garansi --><div class="card">
+<h3>Claim Garansi</h3>
+<label>ID TRX</label><input id="idClaim" class="input" placeholder="Masukkan ID TRX">
+<label>Alasan</label><input id="alasanClaim" class="input" placeholder="Deskripsikan masalah">
+<button class="btn" onclick="kirimKlaim()">Kirim Klaim</button>
+</div><!-- Cek Pesanan --><div class="card">
+<h3>Cek Pesanan</h3>
+<input id="cekTrx" class="input" placeholder="Masukkan ID TRX">
+<button class="btn" onclick="cekStatus()">Cek Status</button>
+<div id="cekResult" style="margin-top:10px;"></div>
+</div><!-- Riwayat Publik --><div class="card" id="riwayatCard">
+<h3>Riwayat Transaksi Publik</h3>
+<div id="riwayat"></div>
+</div><script>
+function loadTrx(){try{return JSON.parse(localStorage.getItem('trx')||'[]')}catch(e){return[]}}
+function saveTrx(arr){localStorage.setItem('trx',JSON.stringify(arr))}
+function renderFeed(){const arr=loadTrx();const container=document.getElementById('riwayat');if(arr.length===0){container.innerHTML='<p>Belum ada transaksi.</p>';return;}let html='';arr.forEach(t=>{html+=`<div style="margin-bottom:8px;padding:8px;border:1px solid #222;border-radius:6px;"><b>ID:</b> ${t.id}<br><b>User:</b> ${t.username}<br><b>Email:</b> ${t.email}<br><b>Paket:</b> ${t.paket}<br><b>Status:</b> ${t.status}<br>${t.image?`<img src="${t.image}" style="width:100px;margin-top:5px;border-radius:6px;">`:''}</div>`});container.innerHTML=html}
+function uploadOrder(){const username=document.getElementById('username').value.trim();const email=document.getElementById('email').value.trim();const paket=document.getElementById('paket').value;const file=document.getElementById('bukti').files[0];if(!username||!email||!paket){return alert('Lengkapi data!')}if(!file){return alert('Pilih file bukti!')}const reader=new FileReader();reader.onload=function(e){const trx={id:'TRX'+Date.now(),username,email,paket:paket.split('|')[0],amount:paket.split('|')[1],image:e.target.result,status:'Berhasil'};const arr=loadTrx(); arr.unshift(trx); saveTrx(arr); renderFeed(); const waUrl = `https://wa.me/6285716768185?text=Halo,%20saya%20telah%20memesan%20${trx.paket}%20dengan%20username%20${trx.username}`; window.open(waUrl, '_blank');};reader.readAsDataURL(file);}
+function cekStatus(){const id=document.getElementById('cekTrx').value.trim();const arr=loadTrx();const found=arr.find(x=>x.id===id);document.getElementById('cekResult').innerHTML=found?`ID: ${found.id}<br>Status: ${found.status}`:'ID tidak ditemukan';}
+function kirimKlaim(){const id=document.getElementById('idClaim').value.trim();const alasan=document.getElementById('alasanClaim').value.trim();if(!id||!alasan) return alert('Lengkapi data claim!');const msg=encodeURIComponent(`CLAIM GARANSI%0AID TRX: ${id}%0AAlasan: ${alasan}`);window.open(`https://wa.me/6285716768185?text=${msg}`,'_blank');}
+function bayarDana(){const nominal = prompt('Masukkan nominal transfer:');if(!nominal) return;window.location.href = `dana://transfer?amount=${nominal}`;}
+function bayarGopay(){const nominal = prompt('Masukkan nominal transfer:');if(!nominal) return;window.location.href = `gopay://transfer?amount=${nominal}`;}
+function tampilkanQRIS(){document.getElementById('qrisContainer').style.display='block';}
+renderFeed();
+</script></body>
+</html>
